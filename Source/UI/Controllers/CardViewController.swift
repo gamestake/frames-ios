@@ -268,11 +268,11 @@ public class CardViewController: UIViewController,
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
-        scrollViewOnKeyboardWillShow(notification: notification, scrollView: cardView.scrollView, activeField: nil)
+//        scrollViewOnKeyboardWillShow(notification: notification, scrollView: cardView.scrollView, activeField: nil)
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        scrollViewOnKeyboardWillHide(notification: notification, scrollView: cardView.scrollView)
+//        scrollViewOnKeyboardWillHide(notification: notification, scrollView: cardView.scrollView)
     }
 
     // MARK: - UITextFieldDelegate
