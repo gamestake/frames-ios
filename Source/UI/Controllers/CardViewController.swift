@@ -322,6 +322,8 @@ public class CardViewController: UIViewController,
     // MARK: CvvInputViewDelegate
 
     public func onChangeCvv() {
+//        scrollViewOnKeyboardWillShow(notification: notification, scrollView: cardView.scrollView, activeField: nil)
+
         validateFieldsValues()
     }
 
