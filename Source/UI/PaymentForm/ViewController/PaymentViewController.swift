@@ -136,14 +136,35 @@ final class PaymentViewController: UIViewController {
   }
 
   @objc private func keyboardWillShow(notification: Notification) {
-    guard let userInfo = notification.userInfo,
-    let keyboardFrameValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-    var keyboardFrame = keyboardFrameValue.cgRectValue
-    keyboardFrame = view.convert(keyboardFrame, from: nil)
-    var contentInset: UIEdgeInsets = scrollView.contentInset
-      contentInset.bottom = keyboardFrame.size.height + Constants.Padding.l.rawValue - 64.0
-    updateScrollViewInset(to: contentInset, from: notification)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+          
+          let info = notification.userInfo!
+          let rect: CGRect = info[UIResponder.keyboardFrameBeginUserInfoKey] as! CGRect
+          let kbSize = rect.size
+          
+          let insets = UIEdgeInsets(top: 0, left: 0, bottom: kbSize.height, right: 0)
+          
+          
+          // If active text field is hidden by keyboard, scroll it so it's visible
+          // Your application might not need or want this behavior.
+          var aRect = self.view.frame;
+          aRect.size.height -= kbSize.height;
+          
+          let activeField: UITextField? = self.view.firstResponder as? UITextField
+          
+          if let activeField = activeField {
+              if !aRect.contains(activeField.frame.origin) {
+                  self.scrollView.contentInset = insets
+                  self.scrollView.scrollIndicatorInsets = insets
+                  let scrollPoint = CGPoint(x: 0, y: activeField.frame.origin.y-kbSize.height)
+                  self.scrollView.setContentOffset(scrollPoint, animated: true)
+              }
+          }
+      }
   }
+      
+    
+    
 
   @objc private func keyboardWillHide(notification: Notification) {
     updateScrollViewInset(to: .zero, from: notification)
@@ -434,4 +455,18 @@ extension PaymentViewController: UIScrollViewDelegate {
       }
     }
   }
+}
+
+extension UIView {
+    var firstResponder: UIView? {
+        guard !isFirstResponder else { return self }
+
+        for subview in subviews {
+            if let firstResponder = subview.firstResponder {
+                return firstResponder
+            }
+        }
+
+        return nil
+    }
 }
