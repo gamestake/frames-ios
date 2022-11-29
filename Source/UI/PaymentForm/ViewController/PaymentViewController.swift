@@ -11,7 +11,7 @@ protocol PaymentViewControllerDelegate: AnyObject {
 }
 
 // swiftlint:disable file_length
-final class PaymentViewController: UIViewController {
+open class PaymentViewController: UIViewController {
 
   // MARK: - Variables
 
@@ -79,9 +79,10 @@ final class PaymentViewController: UIViewController {
     return view
   }()
 
-   lazy var payButtonView: ButtonView = {
-    let view = ButtonView(startEnabled: false)
+   public lazy var payButtonView: ButtonView = {
+    let view = ButtonView(startEnabled: true)
     view.delegate = self
+      
     return view
   }()
 
@@ -96,7 +97,7 @@ final class PaymentViewController: UIViewController {
     super.init(nibName: nil, bundle: nil)
   }
 
-  override func viewDidLoad() {
+    open override func viewDidLoad() {
     super.viewDidLoad()
     UITextField.disableHardwareLayout()
     setupNavigationBar()
@@ -105,12 +106,12 @@ final class PaymentViewController: UIViewController {
     viewModel.updateAll()
   }
 
-  override func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     deregisterKeyboardHandlers(notificationCenter: notificationCenter)
   }
 
-  override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.setNavigationBarHidden(false, animated: animated)
 
@@ -118,7 +119,7 @@ final class PaymentViewController: UIViewController {
     viewModel.viewControllerWillAppear()
   }
 
-  required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -313,8 +314,8 @@ extension PaymentViewController {
   }
 
   private func updatePayButtonView() {
-    guard let style = viewModel.paymentFormStyle?.payButton else { return }
-    payButtonView.update(with: style)
+      // guard let style = viewModel.paymentFormStyle?.payButton else { return }
+   // payButtonView.update(with: style)
   }
 
   private func updateAddBillingFormButtonView() {
@@ -406,13 +407,13 @@ extension PaymentViewController {
 }
 
 extension PaymentViewController: SelectionButtonViewDelegate {
-  func selectionButtonIsPressed() {
+    public func selectionButtonIsPressed() {
     delegate?.addBillingButtonIsPressed(sender: navigationController)
   }
 }
 
 extension PaymentViewController: BillingFormSummaryViewDelegate {
-  func summaryButtonIsPressed() {
+  public func summaryButtonIsPressed() {
     delegate?.editBillingButtonIsPressed(sender: navigationController)
   }
 }
@@ -436,13 +437,13 @@ extension PaymentViewController: SecurityCodeViewDelegate {
 }
 
 extension PaymentViewController: ButtonViewDelegate {
-  func selectionButtonIsPressed(sender: UIView) {
+    public func selectionButtonIsPressed(sender: UIView) {
     delegate?.payButtonIsPressed()
   }
 }
 
 extension PaymentViewController: UIScrollViewDelegate {
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let contentOffsetY = scrollView.contentOffset.y + scrollView.adjustedContentInset.top
 
     if headerView.frame.maxY > 0, contentOffsetY > headerView.frame.maxY / 2 {

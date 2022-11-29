@@ -1,11 +1,11 @@
 import UIKit
 
-protocol ButtonViewDelegate: AnyObject {
+public protocol ButtonViewDelegate: AnyObject {
     func selectionButtonIsPressed(sender: UIView)
 }
 
-class ButtonView: UIView {
-    weak var delegate: ButtonViewDelegate?
+open class ButtonView: UIView {
+    public weak var delegate: ButtonViewDelegate?
     var style: ElementButtonStyle?
     lazy var constraintLeading: NSLayoutConstraint? = buttonTextLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 120.0)
 
@@ -26,14 +26,14 @@ class ButtonView: UIView {
         }
     }
 
-    lazy var button: UIButton = {
-        let view = UIButton().disabledAutoresizingIntoConstraints()
+    public lazy var button: UIButton = {
+        let view = UIButton(type: .custom).disabledAutoresizingIntoConstraints()
         view.addTarget(self, action: #selector(selectionButtonIsPressed), for: .touchUpInside)
         view.isEnabled = isEnabled
         return view
     }()
 
-    private(set) lazy var buttonTextLabel: LabelView = {
+    public lazy var buttonTextLabel: LabelView = {
         LabelView().disabledAutoresizingIntoConstraints()
     }()
 
@@ -51,7 +51,7 @@ class ButtonView: UIView {
         setupConstraintsInOrder()
     }
 
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -66,7 +66,7 @@ class ButtonView: UIView {
         updateLabelStyle(with: style)
     }
 
-    @objc private func selectionButtonIsPressed() {
+    @objc public func selectionButtonIsPressed() {
         delegate?.selectionButtonIsPressed(sender: self)
     }
 
